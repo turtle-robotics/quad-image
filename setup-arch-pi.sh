@@ -59,7 +59,7 @@ arch-chroot root /bin/sh << EOF
 pacman-key --init
 pacman-key --populate archlinuxarm
 
-pacman -Syu --noconfirm sudo fish
+pacman -Syu --noconfirm sudo fish base-devel vim man cmake eigen
 pacman -Sc --noconfirm
 echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
 visudo -c
