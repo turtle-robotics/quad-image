@@ -2,11 +2,17 @@
 # by Ian Lansdowne
 set -e
 
+hostname='quad1'
+ssid='TURTLE QUAD V1'
+user='robot'
+pw='robot'
+
 # Get Arch ARM (aarch64) Filesystem
 wget -Nq http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-aarch64-latest.tar.gz
 
 [[ -z "$device" ]] && read -p 'Device to format: ' device
 [[ -z "$hostname" ]] && read -p 'Enter a hostname: ' hostname
+[[ -z "$ssid" ]] && read -sp 'Enter a ssid: ' ssid
 [[ -z "$user" ]] && read -p 'New User: ' user
 [[ -z "$pw" ]] && read -sp 'Password: ' pw
 
@@ -29,15 +35,20 @@ sed -i "/^#ParallelDownloads/ cParallelDownloads=5" /etc/pacman.conf # faster pa
 
 # Modify configuration files
 
-# Automatically connect to a Wi-Fi network
-cat << EOF > root/etc/netctl/automatic-wifi
-Description='A simple WPA encrypted wireless connection'
-Interface=wlan0
-Connection=wireless
-Security=wpa
-IP=dhcp
-ESSID='<ssid>'
-Key='<password>'
+# Create a dhcp server on wlan0
+cat << EOF > root/etc/systemd/network/wlan0.network
+[Match]
+Name=wlan0
+
+[Network]
+Address=10.1.1.1/24
+DHCPServer=true
+
+[DHCPServer]
+PoolOffset=100
+PoolSize=20
+EmitDNS=yes
+DNS=9.9.9.9
 EOF
 
 echo "$hostname" > root/etc/hostname
@@ -58,7 +69,23 @@ usermod -aG wheel "$user"
 passwd -d root
 userdel -r alarm
 
-netctl enable automatic-wifi
+systemctl enable hostapd systemd-networkd
+EOF
+
+# Modify more configuration files, now that all packages are installed
+
+cat << EOF > root/etc/hostapd/hostapd.conf
+interface=wlan0
+ssid=$ssid
+driver=nl80211
+country_code=US
+channel=acs_survey
+EOF
+
+cat << EOF > root/etc/systemd/system/hostapd.service.d/override.conf
+[Unit]
+BindsTo=sys-subsystem-net-devices-wlan0.device
+After=sys-subsystem-net-devices-wlan0.device
 EOF
 
 umount -AR root
