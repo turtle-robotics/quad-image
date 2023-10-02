@@ -82,10 +82,4 @@ country_code=US
 channel=acs_survey
 EOF
 
-cat << EOF > root/etc/systemd/system/hostapd.service.d/override.conf
-[Unit]
-BindsTo=sys-subsystem-net-devices-wlan0.device
-After=sys-subsystem-net-devices-wlan0.device
-EOF
-
 umount -AR root
