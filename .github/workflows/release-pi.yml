@@ -18,7 +18,6 @@ jobs:
       - name: Run pi-gen
         run: |
           cp -r main/pi/* .
-          rm stage2/EXPORT_NOOBS
           sudo ./build.sh
       - name: Create Release
         uses: softprops/action-gh-release@v1
