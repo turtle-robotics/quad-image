@@ -1,0 +1,23 @@
+name: Build-Pi
+on:
+  workflow_dispatch
+jobs:
+  build-pi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: RPi-Distro/pi-gen
+          ref: arm64
+      - uses: actions/checkout@v4
+        with:
+          path: main
+      - run: sudo apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz
+      - name: Run pi-gen
+        run: |
+          cp -r main/pi/* .
+          rm stage2/EXPORT_NOOBS
+          sudo ./build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          path: deploy/*.img.xz
