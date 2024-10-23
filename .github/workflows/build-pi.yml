@@ -1,6 +1,8 @@
-name: Build-Pi
+name: Build Pi Image
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
 jobs:
   build-pi:
     runs-on: ubuntu-latest
@@ -18,6 +20,13 @@ jobs:
         run: |
           cp -r main/pi/* .
           sudo ./build.sh
-      - uses: actions/upload-artifact@v4
+      - if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/upload-artifact@v4
         with:
           path: deploy/*.img.xz
+      - name: Create Release
+        if: ${{ github.event_name == 'push' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: deploy/*.img.xz
+
