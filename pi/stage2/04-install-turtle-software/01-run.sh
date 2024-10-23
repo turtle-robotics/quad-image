@@ -12,7 +12,7 @@ tee -a "${ROOTFS_DIR}/boot/firmware/config.txt" << EOF
 dtoverlay=dwc2,dr_mode=peripheral
 EOF
 
-echo "modules-load=dwc2,g_ether" >> "${ROOTFS_DIR}/boot/firmware/cmdline.txt"
+sed -i 's/rootwait/rootwait modules-load=dwc2,g_ether/g' "${ROOTFS_DIR}/boot/firmware/cmdline.txt"
 
 tee -a "${ROOTFS_DIR}/etc/dhcpcd.conf" << EOF
 denyinterfaces usb0
