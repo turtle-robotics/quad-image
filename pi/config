@@ -1,4 +1,4 @@
-IMG_NAME=turtle-pi
+IMG_NAME=turtle-pi-$ARCH
 TARGET_HOSTNAME=raspberrypi
 FIRST_USER_NAME=robot
 FIRST_USER_PASS=to_be_removed
