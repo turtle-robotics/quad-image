@@ -18,7 +18,7 @@ jobs:
         with:
           path: main
       - run: sudo apt-get update
-      - run: sudo apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz arch-test
+      - run: sudo apt-get install -y util-linux coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz arch-test
       - name: Run pi-gen
         run: |
           cp -r main/pi/* .
