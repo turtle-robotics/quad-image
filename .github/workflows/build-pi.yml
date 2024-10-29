@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         branch: [arm64, master]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,7 +18,7 @@ jobs:
         with:
           path: main
       - run: sudo apt-get update
-      - run: sudo apt-get install -y util-linux coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz arch-test
+      - run: sudo apt-get install -y rename coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc qemu-utils kpartx gpg pigz arch-test
       - name: Run pi-gen
         run: |
           cp -r main/pi/* .
